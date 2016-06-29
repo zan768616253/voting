@@ -1,5 +1,6 @@
 import makeStore from './src/store';
 import startServer from './src/server';
+import models from './models';
 
 export const store = makeStore();
 

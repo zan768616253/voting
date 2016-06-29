@@ -25,8 +25,11 @@
     "mocha": "^2.5.3"
   },
   "dependencies": {
+    "eventproxy": "^0.3.4",
     "immutable": "^3.8.1",
+    "mongoose": "^4.5.2",
     "redux": "^3.5.2",
-    "socket.io": "^1.4.6"
+    "socket.io": "^1.4.6",
+    "string-template": "^1.0.0"
   }
 }
