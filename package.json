@@ -29,6 +29,8 @@
     "immutable": "^3.8.1",
     "mongoose": "^4.5.2",
     "redux": "^3.5.2",
+    "redux-logger": "^2.6.1",
+    "redux-thunk": "^2.1.0",
     "socket.io": "^1.4.6",
     "string-template": "^1.0.0"
   }

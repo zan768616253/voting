@@ -1,3 +1,5 @@
+import Eventproxy from 'eventproxy';
+
 import models from '../models';
 
 class FaceHelper {
@@ -13,8 +15,71 @@ class FaceHelper {
 			}, (err, rows) => {
 				if (err) {
 					reject(new Error('FaceHelper.vote err: ' + err.message))
+				} else {
+					resolve(true);
 				}
-				resolve(true);
+			})
+		})
+	}
+
+	getFacePair() {
+		console.log('begin FaceHelper.getFacePair');
+		const self = this;
+		return new Promise((resolve, reject) => {
+			const ep = new Eventproxy();
+
+			ep.fail((err) => {
+				console.log('FaceHelper.getFacePair err: ' + err.message);
+				reject(err);
+			});
+
+			ep.all('item1', 'item2', (item1, item2) => {
+				resolve([item1, item2]);
+			});
+
+			ep.once('length', (length) => {
+				self.getFaceRandomly(length).then((face) => {
+					ep.emit('item1', face);
+				}).catch((err) => {
+					ep.emit('error', err);
+				});
+
+				self.getFaceRandomly(length).then((face) => {
+					ep.emit('item2', face);
+				}).catch((err) => {
+					ep.emit('error', err);
+				});
+			});
+
+			self.getWholeLength().then((length) => {
+				ep.emit('length', length);
+			}).catch((err) => {
+				ep.emit('error', err);
+			});
+		})
+	}
+
+	getFaceRandomly(length) {
+		return new Promise((resolve, reject) => {
+			const rand = Math.floor(Math.random() * length);
+			models.Face.findOne().skip(rand).exec((err, face) => {
+				if (err) {
+					reject(new Error('FaceHelper.getFaceRandomly err: ' + err.message))
+				} else {
+					resolve(face);
+				}
+			})
+		})
+	}
+
+	getWholeLength() {
+		return new Promise((resolve, reject) => {
+			models.Face.count((err, count) => {
+				if (err) {
+					reject(new Error('FaceHelper.getCollectionLength err: ' + err.message))
+				} else {
+					resolve(count);
+				}
 			})
 		})
 	}
