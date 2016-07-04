@@ -7,4 +7,6 @@ export const store = makeStore();
 
 startServer(store);
 
-setEntries();
+store.dispatch(
+	setEntries()
+);
