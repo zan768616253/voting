@@ -17,7 +17,7 @@ export function setEntries() {
 }
 
 export const VOTE  = 'VOTE';
-export function vote() {
+export function vote(_id) {
 	return function(dispatch) {
 		const ep = new Eventproxy();
 
@@ -31,12 +31,12 @@ export function vote() {
 				console.log('vote.faceHelper.getFacePair ok');
                 dispatch({ type: 'VOTE', status: 'COMPLETED', pair: pair })
 			}).catch((err) => {
-	            console.log('vote.faceHelper.getFacePair err');
+	            console.log('vote.faceHelper.getFacePair err: ' + err.message);
 	            emit('error', err);
 	        });
 		});
 
-	    faceHelper.vote(entry).then(() => {
+	    faceHelper.vote(_id).then(() => {
 	        console.log('vote.faceHelper.vote ok');
 	        ep.emit('vote', true);
 	    }).catch((err) => {

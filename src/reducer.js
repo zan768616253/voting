@@ -19,7 +19,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         case 'VOTE':
             console.log('begin VOTE status: ' + action.status);
             if (action.status === 'COMPLETED') {
-                return state.updateIn('pair', List(action.pair));
+                return state.set('pair', List(action.pair));
             }
 
     }

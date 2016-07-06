@@ -34,6 +34,8 @@ class FaceHelper {
 			});
 
 			ep.all('item1', 'item2', (item1, item2) => {
+				console.log('item1: ' + JSON.stringify(item1));
+				console.log('item2: ' + JSON.stringify(item2));
 				resolve([item1, item2]);
 			});
 
@@ -62,6 +64,8 @@ class FaceHelper {
 	getFaceRandomly(length) {
 		return new Promise((resolve, reject) => {
 			const rand = Math.floor(Math.random() * length);
+			console.log('length: ' + length);
+			console.log('rand: ' + rand);
 			models.Face.findOne().skip(rand).exec((err, face) => {
 				if (err) {
 					reject(new Error('FaceHelper.getFaceRandomly err: ' + err.message))
