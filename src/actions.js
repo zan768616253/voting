@@ -8,10 +8,10 @@ export const SET_ENTRIES = 'SET_ENTRIES';
 export function setEntries() {
 	return function(dispatch) {
 		faceHelper.getFacePair().then((pair) => {
-			dispatch({ type: 'SET_ENTRIES', status: 'COMPLETED',  pair: pair});
+			dispatch({ type: SET_ENTRIES, status: 'COMPLETED',  pair: pair});
 		}).catch((err) => {
 			console.log(err.message);
-			dispatch({ type: 'SET_ENTRIES', status: 'ERROR' });
+			dispatch({ type: SET_ENTRIES, status: 'ERROR' });
 		})
 	}
 }
@@ -23,13 +23,13 @@ export function vote(_id) {
 
 		ep.fail((err) => {
 			console.log(err.message);
-			dispatch({ type: 'VOTE', status: 'ERROR' });
+			dispatch({ type: VOTE, status: 'ERROR' });
 		});
 
 		ep.once('vote', () => {
 			faceHelper.getFacePair().then((pair) => {
 				console.log('vote.faceHelper.getFacePair ok');
-                dispatch({ type: 'VOTE', status: 'COMPLETED', pair: pair })
+                dispatch({ type: VOTE, status: 'COMPLETED', pair: pair })
 			}).catch((err) => {
 	            console.log('vote.faceHelper.getFacePair err: ' + err.message);
 	            emit('error', err);
@@ -43,5 +43,21 @@ export function vote(_id) {
 	        console.log('vote.faceHelper.vote err');
 	        ep.emit('error', new Error('faceHelper.vote err: ' + err.message));
 	    });
+	}
+}
+
+export const CREATEUSER = 'CREATEUSER';
+export function createUser(email, pwd, rePwd, name) {
+	return function (dispatch) {
+		if (email && pwd && name && pwd === rePwd) {
+
+		} else {
+			dispatch({
+				type: CREATEUSER,
+				status: 'ERROR',
+				message: 'Unauthorized access.',
+				detail: 'Not enough parameters to create user'
+			})
+		}
 	}
 }
