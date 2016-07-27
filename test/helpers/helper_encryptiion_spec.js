@@ -1,9 +1,8 @@
-import chaiImmutable from 'chai-immutable';
 import faker from 'faker';
 
 import { expect } from 'chai';
 
-import EncryptionHelper from '../../helpers/helper_encryption.js';
+import EncryptionHelper from '../../helpers/helper_encryption';
 
 const encryptionHelper = new EncryptionHelper();
 
@@ -26,7 +25,7 @@ describe('encryption helper test', () => {
 	})
 
 	it('encrypt password', () => {
-		const time = Math.floor(Math.hypot(email.length, salt.length) * 59 % 500)+1000;
+		const time = Math.floor(Math.hypot(email.length, salt.length) * 59 % 500) + 1000;
 		console.log('time: %d', time);
 		encrypted = encryptionHelper.encrypt(password, salt+email, time);
 		console.log('encrypted: %s', encrypted);
