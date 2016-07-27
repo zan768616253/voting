@@ -8,9 +8,7 @@ const userSchema = new Schema({
 		trim: true,
 		index: { unique: true },
 		required: [true, 'Email is required'],
-		validate: [validateEmail, 'Email is invalid'],
-		match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Email is invalid'],
-
+		match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Email is invalid']
 	},
 	password: {
 		type: String,

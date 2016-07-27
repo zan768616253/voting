@@ -13,36 +13,46 @@ class EncryptionHelper {
 		}
 	}
 
-	generateSalt (length, seed) {
-		if (!seed) {
-			seed = [
-				Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
-				Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
-				Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
-				Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
-				Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER)
-			];
-		}
+	generateSalt (length) {
+		const seed = [
+			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
+			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
+			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
+			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
+			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER)
+		];
+		console.log('generateSalt seed: %s', seed);
 
-		const wordArray = this.wordArrays[Math.abs(seed[0] % 5)];
-		length = length < 8 ? 8 : length;
 		let text = '';
-		for (let i = 0, size; i < length /8; i++) {
-			let _size = size = Math.round(Math.hypot(seed[i % 5], seed[(i + 1) % 5]));
-			let c = 2;
-			for (let row = 0, cache = 0; row < 9; row++) {
-				if (_size === 0) {
-					_size = Math.pow(size,c);
-					c++;
+		let _size = 0;
+		try {
+			const wordArray = this.wordArrays[Math.abs(seed[0] % 5)];
+			console.log('generateSalt wordArray: %s', wordArray);
+			length = length < 8 ? 8 : length;
+			console.log('generateSalt length: %d', length);
+
+			for (let i = 0, size; i < length / 8; i++) {
+				_size = 0
+				size = Math.round(Math.hypot(seed[i % 5], seed[(i + 1) % 5]));
+				console.log('generateSalt size: %d', size);
+				let c = 2;
+				for (let row = 0, cache = 0; row < 9; row++) {
+					if (_size === 0) {
+						_size = Math.pow(size, c);
+						c++;
+					}
+					let vector = _size % wordArray.length;
+					_size = Math.floor(_size / (10 * vector.toString().length));
+					if (!cache) {
+						cache = vector;
+						vector=-1
+					}
+					text += vector > -1 ? wordArray[(cache + vector) % wordArray.length]:'';
 				}
-				let vector = _size % wordArray.length;
-				_size = Math.floor(_size / (10 * vector.toString().length));
-				if (!cache) {
-					cache = vector;
-					vector=-1
-				}
-				text += vector > -1 ? wordArray[(cache + vector) % wordArray.length]:'';
 			}
+		} catch (e) {
+			text = '';
+			console.log('generateSalt err: %s', e.message);
 		}
 		return text;
 	}
@@ -54,7 +64,8 @@ class EncryptionHelper {
 		for (let i = 0; i < times; i++) {
 			encrypted = cryptoJS.SHA3(encrypted, {outputLength: this.lengths[salt.length % 3]}).toString();
 		}
-		return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(salt+encrypted));
+		return cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(salt+encrypted));
 	}
-}
+};
 
+export default EncryptionHelper;
