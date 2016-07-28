@@ -21,13 +21,12 @@ const userSchema = new Schema({
 	salt: {
 		type: String,
 		required: true
+	},
+	type: {
+		type: String,
+		required: true
 	}
 });
-
-const validateEmail = function (email) {
-	const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-	return reg.test(email);
-}
 
 const User = mongoose.model('User', userSchema);
 

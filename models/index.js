@@ -10,13 +10,16 @@ mongoose.connect(config.db.url, (err) => {
 
 import './face';
 import './user';
+import './session';
 
 const Face = mongoose.model('Face');
 const User = mongoose.model('User');
+const Session = mongoose.model('Session');
 
 const models = {
 	Face: Face,
-	User: User
+	User: User,
+	Session: Session
 };
 
 export default models;

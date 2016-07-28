@@ -48,6 +48,7 @@ class UserHelper {
 			user.name = name;
 			user.password = encryptedPassword;
 			user.salt = salt;
+			user.type = 'local';
 
 			console.log('UserHelper.createUser before user.save');
 			user.save((err) => {
@@ -58,6 +59,10 @@ class UserHelper {
 				resolve(user);
 			})
 		})
+	}
+
+	login () {
+
 	}
 }
 
