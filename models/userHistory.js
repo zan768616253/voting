@@ -27,7 +27,7 @@ const UserHistorySchema = new Schema({
 UserHistorySchema.index({ email: 1, type: 1 });
 
 UserHistorySchema.pre('save', function (next) {
-	console.log('UserHistorySchema.pre this: %s', this);
+	//console.log('UserHistorySchema.pre this: %s', this);
 	const email = this.email;
 	const type = this.type;
 

@@ -21,20 +21,20 @@ class EncryptionHelper {
 			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
 			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER)
 		];
-		console.log('generateSalt seed: %s', seed);
+		//console.log('generateSalt seed: %s', seed);
 
 		let text = '';
 		let _size = 0;
 		try {
 			const wordArray = this.wordArrays[Math.abs(seed[0] % 5)];
-			console.log('generateSalt wordArray: %s', wordArray);
+			//console.log('generateSalt wordArray: %s', wordArray);
 			length = length < 8 ? 8 : length;
-			console.log('generateSalt length: %d', length);
+			//console.log('generateSalt length: %d', length);
 
 			for (let i = 0, size; i < length / 8; i++) {
 				_size = 0
 				size = Math.round(Math.hypot(seed[i % 5], seed[(i + 1) % 5]));
-				console.log('generateSalt size: %d', size);
+				//console.log('generateSalt size: %d', size);
 				let c = 2;
 				for (let row = 0, cache = 0; row < 9; row++) {
 					if (_size === 0) {

@@ -27,21 +27,21 @@ class UserHelper {
 
 	encryptPassword (email, password, salt) {
 		const time = Math.floor(Math.hypot(email.length, salt.length) * 59 % 500) + 1000;
-		console.log('UserHelper.encryptPassword time: %d', time);
+		//console.log('UserHelper.encryptPassword time: %d', time);
 		const encrypted = encryptionHelper.encrypt(password, salt+email, time);
-		console.log('UserHelper.encryptPassword encrypted: %s', encrypted);
+		//console.log('UserHelper.encryptPassword encrypted: %s', encrypted);
 		return encrypted;
 	}
 
 	createUser (email, password, name, length) {
 		return new Promise((resolve, reject) => {
-			console.log('UserHelper.createUser email: %s', email);
-			console.log('UserHelper.createUser password: %s', password);
-			console.log('UserHelper.createUser name: %s', name);
-			console.log('UserHelper.createUser length: %d', length);
+			//console.log('UserHelper.createUser email: %s', email);
+			//console.log('UserHelper.createUser password: %s', password);
+			//console.log('UserHelper.createUser name: %s', name);
+			//console.log('UserHelper.createUser length: %d', length);
 
 			const salt = encryptionHelper.generateSalt(Math.abs(length) % 50);
-			console.log('UserHelper.createUser salt: %s', salt);
+			//console.log('UserHelper.createUser salt: %s', salt);
 			const encryptedPassword = this.encryptPassword(email, password, salt);
 
 			const user = new models.User();
@@ -51,7 +51,7 @@ class UserHelper {
 			user.salt = salt;
 			user.type = 'local';
 
-			console.log('UserHelper.createUser before user.save');
+			//console.log('UserHelper.createUser before user.save');
 			user.save((err) => {
 				if (err) {
 					console.log('UserHelper.createUser err %s', err.message);
@@ -93,7 +93,7 @@ class UserHelper {
 			userHistory.type = type;
 			userHistory.data = data;
 
-			console.log('UserHelper.createUserHistory before save');
+			//console.log('UserHelper.createUserHistory before save');
 			userHistory.save(err => {
 				if (err) {
 					console.log('UserHelper.createUserHistory err %s', err.message);

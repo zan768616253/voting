@@ -29,25 +29,27 @@ describe('user helper test', () => {
 	//	})
 	//})
 
-	it('record user action', (done) => {
-		userHelper.createUserHistory(email, 'password', password).then(result => {
-			console.log('record user action: %s', result);
-			expect(result).to.be.ok;
-			done();
-		}).catch(err => {
-			expect(err).to.be.undefined;
-			done();
-		})
-	})
+	//it('record user action', (done) => {
+	//	userHelper.createUserHistory(email, 'password', password).then(result => {
+	//		console.log('record user action: %s', result);
+	//		expect(result).to.be.ok;
+	//		done();
+	//	}).catch(err => {
+	//		expect(err).to.be.undefined;
+	//		done();
+	//	})
+	//})
+	//
+	//it('record user action again', (done) => {
+	//	userHelper.createUserHistory(email, 'password', password).then(result => {
+	//		console.log('record user action: %s', result);
+	//		expect(result.time).to.be.eql(2);
+	//		done();
+	//	}).catch(err => {
+	//		expect(err).to.be.undefined;
+	//		done();
+	//	})
+	//})
 
-	it('record user action again', (done) => {
-		userHelper.createUserHistory(email, 'password', password).then(result => {
-			console.log('record user action: %s', result);
-			expect(result).to.be.ok;
-			done();
-		}).catch(err => {
-			expect(err).to.be.undefined;
-			done();
-		})
-	})
+
 })
