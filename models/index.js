@@ -11,15 +11,18 @@ mongoose.connect(config.db.url, (err) => {
 import './face';
 import './user';
 import './session';
+import './userHistory';
 
 const Face = mongoose.model('Face');
 const User = mongoose.model('User');
 const Session = mongoose.model('Session');
+const UserHistory = mongoose.model('UserHistory');
 
 const models = {
 	Face: Face,
 	User: User,
-	Session: Session
+	Session: Session,
+	UserHistory: UserHistory
 };
 
 export default models;

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const sessionSchema = new Schema({
-	session: {
+	key: {
 		type: String,
 		trim: true,
 		required: true,
@@ -13,7 +13,7 @@ const sessionSchema = new Schema({
 		type: String,
 		trim: true,
 		required: true,
-		match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Email is invalid']
+		match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 	},
 	device: {
 		type: String,

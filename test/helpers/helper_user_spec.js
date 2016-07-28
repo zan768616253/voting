@@ -17,16 +17,37 @@ describe('user helper test', () => {
 		password = '12345678';
 	});
 
-	it('create user', (done) => {
-		const length = random.integer(1, 2000);
-		userHelper.createUser(email, password, name, length).then((result) => {
-			console.log('create user result: %s', result);
+	//it('create user', (done) => {
+	//	const length = random.integer(1, 2000);
+	//	userHelper.createUser(email, password, name, length).then(result => {
+	//		console.log('create user result: %s', result);
+	//		expect(result).to.be.ok;
+	//		done();
+	//	}).catch(err => {
+	//		expect(err).to.be.undefined;
+	//		done();
+	//	})
+	//})
+
+	it('record user action', (done) => {
+		userHelper.createUserHistory(email, 'password', password).then(result => {
+			console.log('record user action: %s', result);
 			expect(result).to.be.ok;
 			done();
 		}).catch(err => {
-			expect(result).to.be.undefined;
+			expect(err).to.be.undefined;
 			done();
 		})
 	})
 
+	it('record user action again', (done) => {
+		userHelper.createUserHistory(email, 'password', password).then(result => {
+			console.log('record user action: %s', result);
+			expect(result).to.be.ok;
+			done();
+		}).catch(err => {
+			expect(err).to.be.undefined;
+			done();
+		})
+	})
 })
