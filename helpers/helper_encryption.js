@@ -66,6 +66,12 @@ class EncryptionHelper {
 		}
 		return cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(salt+encrypted));
 	}
+
+	decrypt (msg, salt) {
+		const decryption = cryptoJS.AES.decrypt(msg, salt);
+		console.log('decrypt decryption: %s', decryption);
+		return decryption.toString(cryptoJS.enc.Utf8);
+	}
 };
 
 export default EncryptionHelper;

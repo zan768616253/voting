@@ -104,8 +104,37 @@ class UserHelper {
 		})
 	}
 
-	login () {
+	findUserByEmail (email) {
+		return new Promise((resolve, reject) => {
+			models.User.findOne({ 'email': email }, (err, user) => {
+				if (err) {
+					reject(err)
+				}
+				resolve(user);
+			})
+		})
+	}
 
+	login (email, password, device, ip) {
+		return new Promise((resolve, reject) => {
+			const ep = new Eventproxy();
+			ep.fail((err) => {
+				console.log('UserHelper.login err %s', err.message);
+				reject(err);
+			});
+
+			ep.once('user', user => {
+				
+			})
+
+			this.findUserByEmail(email).then(user => {
+				console.log('UserHelper.login.findUserByEmail useer %s', user);
+				ep.emit('user', user);
+			}).catch(err => {
+				console.log('UserHelper.login.findUserByEmail err %s', err.message);
+				ep.emit('error', err)
+			})
+		})
 	}
 }
 
