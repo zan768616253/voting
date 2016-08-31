@@ -9,13 +9,14 @@ export default function startServer(store) {
 	store.subscribe(
 		() => {
 			console.log('store.subscribe state: ' + JSON.stringify(store.getState().toJS()));
-			io.emit('state', store.getState().toJS());
+			io.emit('votees', store.getState().toJS());
 		}
 	);
 
 	io.on('connection', (socket) => {
 		console.log('connection socket id: ' + socket.id);
-		socket.emit('state', store.getState().toJS());
+		socket.emit('votees', store.getState().toJS());
+
 		socket.on('action', (action) => {
 			handle_action(action, store.dispatch);
 		});
@@ -27,6 +28,11 @@ function handle_action(action, dispatch) {
 		switch (action.type) {
 			case 'VOTE':
 				dispatch(actions.vote(action.id));
+				break;
+			case 'USER_CREATE':
+				console.log(action);
+				const userInfo = action.value;
+				//dispatch(actions.createUser(userInfo.email, userInfo.password, userInfo.name. userInfo.seed));
 				break;
 			default:
 				console.log('handle default action');

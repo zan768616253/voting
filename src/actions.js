@@ -51,9 +51,9 @@ export function vote(_id) {
 }
 
 export const CREATEUSER = 'CREATEUSER';
-export function createUser(email, pwd, rePwd, name, seed) {
+export function createUser(email, pwd, name, seed) {
 	return function (dispatch) {
-		if (email && pwd && name && seed && pwd === rePwd && seed.length === 5) {
+		if (email && pwd && name && seed && seed.length === 5) {
 			console.log('actions.createUser params are valid');
 
 			const ep = new Eventproxy();
