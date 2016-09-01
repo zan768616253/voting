@@ -109,8 +109,11 @@ class UserHelper {
 			models.User.findOne({ 'email': email }, (err, user) => {
 				if (err) {
 					reject(err)
+				} else if (!user) {
+					reject(new Error ('Not exist'))
+				} else {
+					resolve(user);
 				}
-				resolve(user);
 			})
 		})
 	}
@@ -124,7 +127,7 @@ class UserHelper {
 			});
 
 			ep.once('user', user => {
-				
+
 			})
 
 			this.findUserByEmail(email).then(user => {

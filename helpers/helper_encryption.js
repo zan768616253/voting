@@ -72,6 +72,8 @@ class EncryptionHelper {
 		console.log('decrypt decryption: %s', decryption);
 		return decryption.toString(cryptoJS.enc.Utf8);
 	}
+
+
 };
 
 export default EncryptionHelper;
