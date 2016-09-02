@@ -73,7 +73,11 @@ class EncryptionHelper {
 		return decryption.toString(cryptoJS.enc.Utf8);
 	}
 
-
+	encodePassword (email, password, seed, salt) {
+		const times = Math.floor(Math.hypot(email.length, salt.length) * 59 % 500) + 1000;
+		const encoded = this.encrypt(password, salt + email, times);
+		return encoded
+	}
 };
 
 export default EncryptionHelper;

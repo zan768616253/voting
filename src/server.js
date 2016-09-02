@@ -8,13 +8,13 @@ export default function startServer(store) {
 
 	store.subscribe(
 		() => {
-			console.log('store.subscribe state: ' + JSON.stringify(store.getState().toJS()));
-			io.emit('votees', store.getState().toJS());
+			//console.log('store.subscribe state: ' + JSON.stringify(store.getState().toJS()));
+			//io.emit('votees', store.getState().toJS());
 		}
 	);
 
 	io.use((socket, next) => {
-		console.log('I m callback function for using socket io');
+		//console.log('I m callback function for using socket io');
 		if (socket.request.headers.cookie)
 			return next();
 		next(new Error('Authentication error'));
@@ -22,10 +22,7 @@ export default function startServer(store) {
 
 	io.on('connection', (socket) => {
 		console.log('connection socket id: ' + socket.id);
-		console.log('socket.handshake: ' + JSON.stringify(socket.handshake));
-
-		socket.emit('votees', store.getState().toJS());
-
+		//socket.emit('votees', store.getState().toJS());
 		socket.on('action', (action) => {
 			handle_action_unauthed(action, store.dispatch, socket.handshake);
 		});
@@ -33,16 +30,16 @@ export default function startServer(store) {
 }
 
 function handle_action_unauthed(action, dispatch) {
-	if (action && action.meta && action.meta.remote) {
+	if (action && action.meta && action.meta.remote && action.token) {
 		switch (action.type) {
 			case 'USER_CREATE':
 				const create_user_Info = action.value;
-				console.log('USER_CREATE.userInfo: ' + JSON.stringify(create_user_Info));
-				console.log('USER_CREATE.userInfo.seed: ' + create_user_Info.seed);
-				dispatch(actions.createUser(create_user_Info.email, create_user_Info.password, create_user_Info.name, create_user_Info.seed));
+				console.log('USER_CREATE.action: ' + JSON.stringify(action));
+				dispatch(actions.createUser(create_user_Info.email, create_user_Info.password, create_user_Info.name, action.seed));
 				break;
 			case 'USER_LOGIN':
 				const login_user_Info = action.value;
+
 				break;
 			default:
 				console.log('handle default action');

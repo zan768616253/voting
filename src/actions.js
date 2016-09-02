@@ -129,3 +129,22 @@ export function createSession(email, device, ip, seed) {
 	}
 }
 
+export const LOGIN = 'LOGIN';
+export function login(email, password, seed, device, ip) {
+	return function (dispatch) {
+		if (email && password && seed && device && ip) {
+			userHelper.login(email, password, seed, device, ip).then(session => {
+				console.log('actions.login successfully');
+				dispatch({
+					type: LOGIN,
+					status: 'COMPLETED',
+					session: session
+				})
+			}).catch(err => {
+				util.dispatchError(dispatch, LOGIN, 'Internal server error', err.message);
+			})
+		} else {
+			util.dispatchError(dispatch, LOGIN, 'Unauthorized access.', 'Not enough parameters to login');
+		}
+	}
+}

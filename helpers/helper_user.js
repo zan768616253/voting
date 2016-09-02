@@ -118,7 +118,7 @@ class UserHelper {
 		})
 	}
 
-	login (email, password, device, ip) {
+	login (email, password, seed, device, ip) {
 		return new Promise((resolve, reject) => {
 			const ep = new Eventproxy();
 			ep.fail((err) => {
@@ -126,8 +126,26 @@ class UserHelper {
 				reject(err);
 			});
 
-			ep.once('user', user => {
+			ep.once('session', session => {
+				console.log('UserHelper.login.once.session session %s', session);
+				resolve(session);
+			})
 
+			ep.once('user', user => {
+				const encodedPassword = encryptionHelper.encodePassword(email, password, seed, user.salt);
+				if (encodedPassword === user.password) {
+					user.device = device;
+					user.ip = ip;
+					this.createSession(email, device, ip, seed).then((session) => {
+						ep.emit('session', session);
+					}).catch((err) => {
+						console.log('UserHelper.login.once.user.createSession err %s', err.message);
+						ep.emit('error', err);
+					})
+				} else {
+					console.log('UserHelper.login.once.user err %s', 'user password is not corrected');
+					ep.emit('error', new Error('email and password is not matched'))
+				}
 			})
 
 			this.findUserByEmail(email).then(user => {
