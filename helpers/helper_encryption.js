@@ -13,15 +13,15 @@ class EncryptionHelper {
 		}
 	}
 
-	generateSalt (length) {
-		const seed = [
+	generateSalt (length, seed) {
+		seed = seed ? seed : [
 			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
 			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
 			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
 			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER),
 			Math.floor(Math.random()*2) ? Math.floor(Math.random()*Number.MAX_SAFE_INTEGER) : Math.floor(Math.random()*Number.MIN_SAFE_INTEGER)
 		];
-		//console.log('generateSalt seed: %s', seed);
+		console.log('generateSalt seed: %s', seed);
 
 		let text = '';
 		let _size = 0;
@@ -60,23 +60,14 @@ class EncryptionHelper {
 	encrypt (msg, salt, times) {
 		times = (times > 1000 && times != 0) ? 1000 : times;
 		const utf8 = cryptoJS.enc.Utf8.parse(salt + msg).toString();
+		console.log('EncryptionHelper.encrypt.utf8: %s', utf8);
 		let encrypted = cryptoJS.SHA3(utf8, {outputLength: this.lengths[salt.length % 3]}).toString();
+		console.log('EncryptionHelper.encrypt.encrypted: %s', encrypted);
 		for (let i = 0; i < times; i++) {
 			encrypted = cryptoJS.SHA3(encrypted, {outputLength: this.lengths[salt.length % 3]}).toString();
 		}
-		return cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(salt+encrypted));
-	}
-
-	decrypt (msg, salt) {
-		const decryption = cryptoJS.AES.decrypt(msg, salt);
-		console.log('decrypt decryption: %s', decryption);
-		return decryption.toString(cryptoJS.enc.Utf8);
-	}
-
-	encodePassword (email, password, seed, salt) {
-		const times = Math.floor(Math.hypot(email.length, salt.length) * 59 % 500) + 1000;
-		const encoded = this.encrypt(password, salt + email, times);
-		return encoded
+		console.log('EncryptionHelper.encrypt: just before return');
+		return cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(salt + encrypted));
 	}
 };
 

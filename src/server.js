@@ -29,17 +29,20 @@ export default function startServer(store) {
 	});
 }
 
-function handle_action_unauthed(action, dispatch) {
+function handle_action_unauthed(action, dispatch, handshake) {
 	if (action && action.meta && action.meta.remote && action.token) {
 		switch (action.type) {
 			case 'USER_CREATE':
 				const create_user_Info = action.value;
 				console.log('USER_CREATE.action: ' + JSON.stringify(action));
-				dispatch(actions.createUser(create_user_Info.email, create_user_Info.password, create_user_Info.name, action.seed));
+				dispatch(actions.createUser(create_user_Info.email, create_user_Info.password, create_user_Info.name, action.seed.split(',')));
 				break;
 			case 'USER_LOGIN':
 				const login_user_Info = action.value;
-
+				console.log('USER_LOGIN.action: ' + JSON.stringify(action));
+				const ip = handshake.headers.host;
+				const device = handshake.headers['user-agent'];
+				dispatch(actions.login(login_user_Info.email, login_user_Info.password, action.seed.split(','), device, ip));
 				break;
 			default:
 				console.log('handle default action');

@@ -79,7 +79,7 @@ export function createUser(email, pwd, name, seed) {
 
 			ep.once('available', () => {
 				console.log('actions.createUser email is available');
-				userHelper.createUser(email, pwd, name, _.head(seed)).then((user) => {
+				userHelper.createUser(email, pwd, name, seed, _.head(seed)).then((user) => {
 					console.log('actions.createUser ep.emit user');
 					ep.emit('user', user);
 				}).catch((err) => {

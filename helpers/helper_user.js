@@ -27,21 +27,19 @@ class UserHelper {
 
 	encryptPassword (email, password, salt) {
 		const time = Math.floor(Math.hypot(email.length, salt.length) * 59 % 500) + 1000;
-		//console.log('UserHelper.encryptPassword time: %d', time);
 		const encrypted = encryptionHelper.encrypt(password, salt+email, time);
-		//console.log('UserHelper.encryptPassword encrypted: %s', encrypted);
 		return encrypted;
 	}
 
-	createUser (email, password, name, length) {
+	createUser (email, password, name, seed, length) {
 		return new Promise((resolve, reject) => {
 			//console.log('UserHelper.createUser email: %s', email);
 			//console.log('UserHelper.createUser password: %s', password);
 			//console.log('UserHelper.createUser name: %s', name);
 			//console.log('UserHelper.createUser length: %d', length);
 
-			const salt = encryptionHelper.generateSalt(Math.abs(length) % 50);
-			//console.log('UserHelper.createUser salt: %s', salt);
+			const salt = encryptionHelper.generateSalt(Math.abs(length) % 50, seed);
+			console.log('UserHelper.createUser salt: %s', salt);
 			const encryptedPassword = this.encryptPassword(email, password, salt);
 
 			const user = new models.User();
@@ -64,17 +62,27 @@ class UserHelper {
 
 	createSession (email, device, ip, seed) {
 		return new Promise((resolve, reject) => {
-			const subKey = encryptionHelper.generateSalt(16);
+			console.log('enter UserHelper.createSession');
+			const subKey = encryptionHelper.generateSalt(16, seed);
+			console.log('UserHelper.createSession.subKey: ' + subKey);
 			const salt = encryptionHelper.generateSalt(Math.abs(_.last(seed)) % 50, seed);
+			console.log('UserHelper.createSession.salt: ' + salt);
 			const time = Math.floor(Math.hypot(_.head(seed), _.last(seed) % 500)) + 1000;
+			console.log('UserHelper.createSession.time: ' + time);
 			const key = encryptionHelper.encrypt(subKey, salt, time);
-			console.log(key);
+			console.log('UserHelper.createSession.key: ' + key);
 
 			const session = new models.Session();
+			console.log('UserHelper.createSession model value 1');
 			session.key = key;
+			console.log('UserHelper.createSession model value 2');
 			session.email = email;
+			console.log('UserHelper.createSession model value 3');
 			session.device = device;
+			console.log('UserHelper.createSession model value 4');
 			session.ip = ip;
+
+			console.log('UserHelper.createSession session: %s', JSON.stringify(session.toJSON()));
 
 			session.save(err => {
 				if (err) {
@@ -132,7 +140,15 @@ class UserHelper {
 			})
 
 			ep.once('user', user => {
-				const encodedPassword = encryptionHelper.encodePassword(email, password, seed, user.salt);
+				console.log('UserHelper.login.once.user: just before encodedPassword');
+				console.log('UserHelper.login.once.user.email: %s', email);
+				console.log('UserHelper.login.once.user.password: %s', password);
+				console.log('UserHelper.login.once.user.salt: %s', user.salt);
+				const encodedPassword = this.encryptPassword(email, password, user.salt);
+
+				console.log('UserHelper.login.once.user.encodedPassword: ' + encodedPassword);
+				console.log('UserHelper.login.once.user.password: ' + user.password);
+
 				if (encodedPassword === user.password) {
 					user.device = device;
 					user.ip = ip;
