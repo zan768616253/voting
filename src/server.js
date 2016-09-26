@@ -8,7 +8,8 @@ export default function startServer(store) {
 
 	store.subscribe(
 		() => {
-			//console.log('store.subscribe state: ' + JSON.stringify(store.getState().toJS()));
+			console.log('store.subscribe last action: ' + store.getState().get('action'));
+			console.log('store.subscribe state: ' + JSON.stringify(store.getState().toJS()));
 			//io.emit('votees', store.getState().toJS());
 		}
 	);
