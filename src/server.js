@@ -2,8 +2,12 @@ import Server from 'socket.io';
 
 import * as actions from './actions';
 
+import AuthenticateHelper from '../helpers/helper_authenticate'
+
 export default function startServer(store) {
 	const io = Server(8090);
+	const authenticateHelper = new AuthenticateHelper();
+
 	console.log('8090 is attached');
 
 	store.subscribe(
@@ -16,15 +20,31 @@ export default function startServer(store) {
 	);
 
 	io.use((socket, next) => {
-		//console.log('I m callback function for using socket io');
-		if (socket.request.headers.cookie)
-			return next();
-		next(new Error('Authentication error'));
+		console.log('I m callback function for using socket io');
+
+		const headers = socket.request.headers;
+		const cookie = headers.cookie;
+		const cookies = authenticateHelper.processCookie(cookie);
+		const seed = cookies['seed'];
+		const mf_auth = cookies['mf_auth'];
+
+		console.log('io.use.before authenticateHelper.checkAuth');
+		authenticateHelper.checkAuth(seed, mf_auth).then(session => {
+			console.log('io.use.after authenticateHelper.checkAuth get session: ' + session);
+			if (session) {
+				next();
+			} else {
+				next(new Error('Authentication error'));
+			}
+		}).catch(err => {
+			console.log('io.use.after authenticateHelper.checkAuth get error: ' + err.message);
+			next(new Error('Authentication error'));
+		})
 	})
 
 	io.on('connection', (socket) => {
 		console.log('connection socket id: ' + socket.id);
-		//socket.emit('votees', store.getState().toJS());
+
 		socket.on('action', (action) => {
 			handle_action_unauthed(action, store.dispatch, socket.handshake);
 		});

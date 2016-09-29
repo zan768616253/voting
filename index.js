@@ -6,7 +6,3 @@ import models from './models';
 export const store = makeStore();
 
 startServer(store);
-
-store.dispatch(
-	setEntries()
-);

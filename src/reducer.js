@@ -29,7 +29,6 @@ export default function reducer(state = INITIAL_STATE, action) {
 				return state.set('session', action.session).set('action', action.type);
 		    }
 		    break;
-
     }
     return state;
 }
